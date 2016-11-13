@@ -1,4 +1,1 @@
-# pagination-ajax-response
-# pagination-ajax-response
-# pagination-ajax-response
-# pagination-ajax-response
+# Pagination-ajax-response
