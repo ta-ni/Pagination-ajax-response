@@ -1,0 +1,67 @@
+body{background:#eee;margin:0;padding:0}
+
+#content {
+    position:relative;
+}
+
+.user-info {
+    border: 1px solid black;
+    margin: 10px 0;
+    position: relative;
+    padding: 10px 0;
+    color: dimgray;
+}
+
+.user-info .user-text {
+    position: absolute;
+    left: 70px;
+}
+
+.user-info a {
+    display: inline-block;
+    text-decoration: none;
+    color: dimgray;
+}
+
+.user-info a:hover {
+    color: #eb9316;
+}
+
+.user-avatar {
+    width: 50px;
+    height: 50px;
+    margin-left: 5px;
+}
+
+.pagination{
+    padding: 2px;
+}
+.pagination ul{
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    font-size: 16px;
+}
+.pagination li{
+    list-style-type: none;
+    display: inline;
+    padding-bottom: 1px;
+}
+.pagination a {
+    padding: 0 5px;
+    border: 1px solid #9aafe5;
+    text-decoration: none;
+    color: #2e6ab1;
+    font-weight: bold;
+}
+
+.pagination .inactive {
+    background-color: gainsboro;
+    color: darkgray;
+}
+
+#page_number {
+    color: dimgray;
+}
+
+
