@@ -1,11 +1,8 @@
-var api = 'https://api.github.com/',
-    option = {
-      page: 1,
-      perPage: 3
-    };
+var API = 'https://api.github.com/',
+    REPOS_PER_PAGE = 3,
+    currentPage = 1;
 
-
-showResult(option);
+showResult();
 toggleActive();
 
 
@@ -13,7 +10,7 @@ toggleActive();
 
 function getAjaxResult(callback, option) {
   $.ajax({
-    url: api + 'users/octocat/repos?page='+ option.page +'&per_page='+ option.perPage,
+    url: API + 'users/octocat/repos?page='+ option.page +'&per_page='+ option.perPage,
     method: 'GET',
     success: callback,
     error: function () {
@@ -23,7 +20,12 @@ function getAjaxResult(callback, option) {
 }
 
 //-------- callback -----------
-function showResult(option){
+function showResult(){
+  var option = {
+    page: currentPage,
+    perPage: REPOS_PER_PAGE
+  };
+
   getAjaxResult(function (result) {
     var html = [];
     var repository, text;
@@ -37,7 +39,7 @@ function showResult(option){
           .append($('<a href="'+ result[i].owner.html_url + '" class="user-login">' + result[i].owner.login +'</a><span> / </span>'))
           .append($('<a href="'+ result[i].html_url + '" class="user-repository">' + result[i].name +'</a>'));
 
-      if(!(result[i].description === null)) {
+      if(!(result[i].description === null) || (result[i].description !== null)) {
         text
             .append($('<p class="user-description">' + result[i].description +'</p>'));
       }
@@ -59,35 +61,39 @@ function showResult(option){
 
 $('#prev').on('click', function(){
 
-  if ( option.page === 1 ) return;
-  option.page--;
+  if ( currentPage === 1 ) return;
+  currentPage--;
 
   $('#content').empty();
-  showResult(option);
+  showResult();
   toggleActive();
 });
 
 
 $('#next').on('click', function(){
 
-  if(option.page === 3) return;
-  option.page++;
+  if(currentPage === 3) return;
+  currentPage++;
 
   $('#content').empty();
-  showResult(option);
+  showResult();
   toggleActive();
 });
 
 
 function toggleActive () {
 
-  if (option.page === 1) {
+  if (currentPage === 1) {
     $('#prev').addClass('inactive');
     $('#next').removeClass('inactive');
   }
-  else if (option.page === 3){
+  else if (currentPage === 3){
     $('#next').addClass('inactive');
     $('#prev').removeClass('inactive');
   }
-  $('#page_number').text(option.page);
+  else {
+    $('#next').removeClass('inactive');
+    $('#prev').removeClass('inactive');
+  }
+  $('#page_number').text(currentPage);
 }
