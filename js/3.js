@@ -1,10 +1,22 @@
 var API = 'https://api.github.com/',
     REPOS_PER_PAGE = 3,
-    currentPage = 1;
+    currentPage = 1,
+    lastPage;
 
+getLastPage();
 showResult();
-toggleActive();
 
+//------- get last page -------
+function getLastPage () {
+  var option = {
+    page: undefined,
+    perPage: undefined
+  };
+
+  getAjaxResult(function(result){
+    lastPage = (result.length - result.length % REPOS_PER_PAGE)/REPOS_PER_PAGE;
+  }, option);
+}
 
 //-------- ajax result-------
 
@@ -19,7 +31,7 @@ function getAjaxResult(callback, option) {
   });
 }
 
-//-------- callback -----------
+//-------- show result -----------
 function showResult(){
   var option = {
     page: currentPage,
@@ -27,8 +39,9 @@ function showResult(){
   };
 
   getAjaxResult(function (result) {
-    var html = [];
-    var repository, text;
+
+    var html = [], repository, text;
+    $('#content').empty();
 
     for(var i = 0; i < result.length; i++){
 
@@ -39,11 +52,10 @@ function showResult(){
           .append($('<a href="'+ result[i].owner.html_url + '" class="user-login">' + result[i].owner.login +'</a><span> / </span>'))
           .append($('<a href="'+ result[i].html_url + '" class="user-repository">' + result[i].name +'</a>'));
 
-      if(!(result[i].description === null) || (result[i].description !== null)) {
+      if( result[i].description !== null ) {
         text
             .append($('<p class="user-description">' + result[i].description +'</p>'));
       }
-
 
         repository
           .append(text)
@@ -53,6 +65,7 @@ function showResult(){
     }
 
     $('#content').append(html);
+
   }, option);
 }
 
@@ -64,7 +77,6 @@ $('#prev').on('click', function(){
   if ( currentPage === 1 ) return;
   currentPage--;
 
-  $('#content').empty();
   showResult();
   toggleActive();
 });
@@ -72,10 +84,9 @@ $('#prev').on('click', function(){
 
 $('#next').on('click', function(){
 
-  if(currentPage === 3) return;
+  if(currentPage === lastPage) return;
   currentPage++;
 
-  $('#content').empty();
   showResult();
   toggleActive();
 });
@@ -83,17 +94,17 @@ $('#next').on('click', function(){
 
 function toggleActive () {
 
-  if (currentPage === 1) {
-    $('#prev').addClass('inactive');
-    $('#next').removeClass('inactive');
-  }
-  else if (currentPage === 3){
-    $('#next').addClass('inactive');
-    $('#prev').removeClass('inactive');
-  }
-  else {
-    $('#next').removeClass('inactive');
-    $('#prev').removeClass('inactive');
+  if ( currentPage === 1 ) {
+    $('#prev').toggleClass('inactive', true);
+    $('#next').toggleClass('inactive', false);
+  } else if (currentPage === lastPage) {
+
+    $('#prev').toggleClass('inactive', false);
+    $('#next').toggleClass('inactive', true);
+  } else {
+
+    $('#next').toggleClass('inactive', false);
+    $('#prev').toggleClass('inactive', false);
   }
   $('#page_number').text(currentPage);
 }
